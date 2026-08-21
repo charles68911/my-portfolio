@@ -1,35 +1,118 @@
+import { useState } from "react";
+
 import { NavLink } from "react-router";
-import logoImage from "@/assets/images/logo.png";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
+import { Menu, X } from "lucide-react";
+import { Section } from "@/components/common/section";
+
+const navItems = [
+  { label: "Home", to: "/" },
+  { label: "About", to: "/about" },
+];
 
 export function Header() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsMenuOpen((prev) => !prev);
+  };
+
+  const getLinkClass = (isActive: boolean) => {
+    if (isActive) {
+      return "text-white";
+    } else {
+      return "text-gray-400 hover:text-white";
+    }
+  };
+
   return (
-  <header className="absolute top-0 left-0 w-full bg-gradient-to-b from-black/95 via-black/60 to-transparent pb-16 pt-2 border-none z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-24">
-          
+    <header className="bg-gray-950/80 backdrop-blur-md border-b border-gray-800 sticky top-0 z-50">
+      <div
+        className={cn(
+          "fixed inset-0 bg-black/60 transition-opacity duration-300 md:hidden z-40",
+          isMenuOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+        )}
+        onClick={toggleMenu}
+      />
+
+      <Section className="py-0" containerClassName="relative z-50">
+        <div className="flex items-center justify-between h-16">
           <div className="flex-shrink-0">
-            <NavLink to="/" className="flex items-center">
-              <img 
-                src={logoImage} 
-                alt="Logo" 
-                className="h-16 w-auto object-contain drop-shadow-md"
-              />
+            <NavLink
+              to="/"
+              className="text-xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-400"
+              onClick={toggleMenu}
+            >
+              Charles Pogoy
             </NavLink>
           </div>
 
-          <nav className="flex items-center space-x-6 sm:space-x-8">
-            <NavLink to="/" className="text-sm font-semibold text-white text-gray-900 hover:text-gray-300 transition-colors drop-shadow-sm">
-              Home
-            </NavLink>
-            <NavLink to="/about" className="text-sm font-semibold text-white text-gray-900 hover:text-gray-300 transition-colors drop-shadow-sm">
-              About
-            </NavLink>
+          <nav className="hidden md:flex items-center space-x-8">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  cn("text-sm font-medium transition-colors", getLinkClass(isActive))
+                }
+              >
+                {item.label}
+              </NavLink>
+            ))}
 
-            <NavLink to="/contact" className="text-sm font-semibold text-white hover:text-gray-300 transition-colors drop-shadow-md">
-            Contact
+            <NavLink to="/contact">
+              <Button className="bg-indigo-600 hover:bg-indigo-500 text-white">
+                Contact
+              </Button>
             </NavLink>
           </nav>
 
+          <div className="flex md:hidden">
+            <button
+              onClick={toggleMenu}
+              type="button"
+              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-800 focus:outline-none"
+              aria-expanded={isMenuOpen}
+            >
+              {isMenuOpen ? (
+                <X className="h-6 w-6" aria-hidden="true" />
+              ) : (
+                <Menu className="h-6 w-6" aria-hidden="true" />
+              )}
+            </button>
+          </div>
+        </div>
+      </Section>
+
+      <div
+        className={cn(
+          "md:hidden border-t border-gray-800 bg-gray-950 transition-all duration-300 ease-in-out grid overflow-hidden absolute top-16 left-0 right-0 border-b shadow-lg z-50",
+          isMenuOpen ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0 pointer-events-none"
+        )}
+      >
+        <div className="overflow-hidden">
+          <div className="px-4 pt-2 pb-4 space-y-2 flex flex-col">
+            {navItems.map((item) => (
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={({ isActive }) =>
+                  cn("text-sm font-medium py-2 transition-colors", getLinkClass(isActive))
+                }
+                onClick={toggleMenu}
+              >
+                {item.label}
+              </NavLink>
+            ))}
+            <div className="pt-2 border-t border-gray-800">
+              <NavLink to="/contact" onClick={toggleMenu} className="inline-block w-full">
+                <Button className="w-full bg-indigo-600 hover:bg-indigo-500 text-white">
+                  Contact
+                </Button>
+              </NavLink>
+            </div>
+          </div>
         </div>
       </div>
     </header>

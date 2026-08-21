@@ -1,7 +1,7 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
-import path from 'path' // <-- KULANG 1
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import tailwindcss from "@tailwindcss/vite";
+import path from "path";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -9,10 +9,9 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
-  /* KULANG 2: */
   resolve: {
     alias: {
-      '@': path.resolve(import.meta.dirname, './src'),
+      '@': path.resolve(__dirname, './src'),
     },
   },
 })
